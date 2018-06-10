@@ -3,6 +3,10 @@ main: me.engineersbox.rankviewer.Main
 version: 1.0
 author: EngineersBox
 commands:
+    rv:
+        description: Displays Plugin Version Information
+        usage: /rv
+        permission: rv.use
     rv version:
         description: Displays Plugin Version Information
         usage: /rv version
@@ -22,6 +26,7 @@ permissions:
         rv.version: true
         rv.help: true
         rv.reload: true
+        rv.use: true
     rv.version:
         description: Gives Access To View Current Plugin Version
         default: true
@@ -31,3 +36,6 @@ permissions:
     rv.reload:
         description: Gives Access To Reload The Pugin
         default: false
+    rv.use:
+        description: Alias for rv.help
+        default: true
