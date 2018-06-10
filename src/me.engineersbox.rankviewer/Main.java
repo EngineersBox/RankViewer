@@ -1,10 +1,8 @@
 package me.engineersbox.rankviewer;
 
-import java.io.File;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,16 +18,16 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class Main extends JavaPlugin implements Listener {
 	
-	public static FileConfiguration config;
-	public static File cfile;
+	public static String prefix = ChatColor.AQUA + "[" + ChatColor.BLUE + "Rank Viewer" + ChatColor.AQUA + "] ";
 	
-	public static String prefix = ChatColor.AQUA + "[" + ChatColor.RED + "BlockPalette" + ChatColor.AQUA + "] ";
-	
+	@Override
     public void onEnable() {
         
     	Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getCommand("rv version").setExecutor(new Commands());
         getCommand("rv help").setExecutor(new Commands());
+        getCommand("rv reload").setExecutor(new Commands());
+        getCommand("rv").setExecutor(new Commands());
         
     }
     
