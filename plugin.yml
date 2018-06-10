@@ -1,0 +1,33 @@
+name: RankViewer
+main: me.engineersbox.rankviewer.Main
+version: 1.0
+author: EngineersBox
+commands:
+    rv version:
+        description: Displays Plugin Version Information
+        usage: /rv version
+        permission: rv.version
+    rv help:
+        description: Displays Plugin Version Information
+        usage: /rv help
+        permission: rv.help
+    rv reload:
+        description: Reloads The Plugin
+        usage: /rv reload
+        permission: rv.reload
+permissions:
+    rv.*:
+        description: Gives Access To All RankViewer Commands
+        children:
+        rv.version: true
+        rv.help: true
+        rv.reload: true
+    rv.version:
+        description: Gives Access To View Current Plugin Version
+        default: true
+    rv.help:
+        description: Gives Access To RankViewer Help Section
+        default: true
+    rv.reload:
+        description: Gives Access To Reload The Pugin
+        default: false
