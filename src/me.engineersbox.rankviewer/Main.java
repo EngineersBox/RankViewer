@@ -17,7 +17,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import ru.tehkode.permissions.PermissionGroup;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -63,17 +62,17 @@ public class Main extends JavaPlugin implements Listener {
 		PermissionUser user2 = PermissionsEx.getUser(p);
 		
 		List<String> groups = new ArrayList<>();
-		List<PermissionGroup> g2 = user2.getParents();
+		List<String> g2 = user2.getParentIdentifiers();
+		String prefix = format(user2.getPrefix());
 		String username = user2.getName();
 		for (int i = 0; i < g2.size(); i++) {
-			groups.add(format(g2.get(i).getPrefix()));
+			groups.add(g2.get(i));
 		}
 		
 		String ChatMessage = e.getMessage();
 		e.setCancelled(true);
 		
 		TextComponent comp = new TextComponent(ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "] " + ChatColor.WHITE);
-		//comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.BLUE + "Groups" + ChatColor.WHITE + ":").create()));
 		
 		ArrayList<Object> components = new ArrayList<>();
 		TextComponent hoverMessage = new TextComponent(new ComponentBuilder(groups.get(0)).create());
@@ -85,11 +84,13 @@ public class Main extends JavaPlugin implements Listener {
 			hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groups.get(i)).create()));
 			
 		}
+		
 		components.add(hoverMessage);
 		BaseComponent[] hoverToSend = (BaseComponent[])components.toArray(new BaseComponent[components.size()]);
+		
 		comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 		
-		TextComponent comp2 = new TextComponent(username + ": ");
+		TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE + ": ");
 		comp2.addExtra(ChatMessage);
 		
 		p.spigot().sendMessage(comp, comp2);
