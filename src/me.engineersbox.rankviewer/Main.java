@@ -11,6 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.util.DiscordUtil;
+
 import net.md_5.bungee.api.chat.BaseComponent;
 //import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -57,16 +60,16 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public static void onPlayerChat(AsyncPlayerChatEvent e) {
 		
-		Player p = e.getPlayer();;
+		Player p = e.getPlayer();
 		
 		PermissionUser user2 = PermissionsEx.getUser(p);
 		
 		List<String> groups = new ArrayList<>();
-		List<String> g2 = user2.getParentIdentifiers();
+		List<String> g2 = user2.getOwnParentIdentifiers();
 		String prefix = format(user2.getPrefix());
 		String username = user2.getName();
 		for (int i = 0; i < g2.size(); i++) {
-			groups.add(g2.get(i));
+			groups.add(g2.get(i).toString());
 		}
 		
 		String ChatMessage = e.getMessage();
@@ -90,10 +93,17 @@ public class Main extends JavaPlugin implements Listener {
 		
 		comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 		
-		TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE + ": ");
+		TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
 		comp2.addExtra(ChatMessage);
+
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			
+			player.spigot().sendMessage(comp, comp2);
+			e.setMessage(ChatMessage);
+
+		}
 		
-		p.spigot().sendMessage(comp, comp2);
+		DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
 		
 	}
     
