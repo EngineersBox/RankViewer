@@ -15,6 +15,7 @@ import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.util.DiscordUtil;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 //import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -69,6 +70,28 @@ public class Main extends JavaPlugin implements Listener {
 		String ChatMessage = e.getMessage();
 		e.setCancelled(true);
 		
+		String[] chatSplit = ChatMessage.split(" ");
+		String convURL = "";
+		Boolean hasURL = false;
+		
+		for (int i = 0; i < chatSplit.length; i++) {
+			
+			if ((chatSplit[i].contains("https")) || (chatSplit[i].contains("http"))) {
+				
+				convURL = chatSplit[i].toString();
+				hasURL = true;
+				break;
+				
+			} else {
+				
+				hasURL = false;
+				
+			}
+			
+		}
+		
+		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + ChatColor.BLUE + ChatColor.UNDERLINE + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
+		
 		if ((user2.inGroup("default")) && (user2.getOwnParentIdentifiers().size() < 1)) {
 			
 			/*p.sendMessage("no groups");
@@ -91,13 +114,37 @@ public class Main extends JavaPlugin implements Listener {
 			
 			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend2));
 			
-			TextComponent comp2 = new TextComponent(prefixDefault + username + ChatColor.WHITE +": ");
-			comp2.addExtra(ChatMessage);
+			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
+			TextComponent comp3 = new TextComponent();
 			
+			if (hasURL.equals(true)) {
+				
+				String[] messageSplit = ChatMessage.split(convURL);
+				
+				String messageFirst = messageSplit[0].toString();
+				String messageSecond = messageSplit[1].toString();
+				messageSecond.replaceAll(convURL, "");
+				
+				comp2.addExtra(messageFirst);
+				comp3.addExtra(messageSecond);
+				
+			} else {
+				
+				comp2.addExtra(ChatMessage);
+				
+			}
+	
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				
-				player.spigot().sendMessage(rTab, comp2);
-				e.setMessage(ChatMessage);
+				if (hasURL.equals(true)) {
+					
+					player.spigot().sendMessage(rTab, comp2, linkClickable, comp3);
+					
+				} else {
+					
+					player.spigot().sendMessage(rTab, comp2);
+					
+				}
 	
 			}
 			
@@ -134,14 +181,39 @@ public class Main extends JavaPlugin implements Listener {
 			BaseComponent[] hoverToSend = (BaseComponent[])components.toArray(new BaseComponent[components.size()]);
 			
 			comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
+			linkClickable.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, convURL));
 			
 			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
-			comp2.addExtra(ChatMessage);
+			TextComponent comp3 = new TextComponent();
+			
+			if (hasURL.equals(true)) {
+				
+				String[] messageSplit = ChatMessage.split(convURL);
+				
+				String messageFirst = messageSplit[0].toString();
+				String messageSecond = messageSplit[1].toString();
+				messageSecond.replaceAll(convURL, "");
+				
+				comp2.addExtra(messageFirst);
+				comp3.addExtra(messageSecond);
+				
+			} else {
+				
+				comp2.addExtra(ChatMessage);
+				
+			};
 	
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				
-				player.spigot().sendMessage(comp, comp2);
-				e.setMessage(ChatMessage);
+				if (hasURL.equals(true)) {
+					
+					player.spigot().sendMessage(comp, comp2, linkClickable, comp3);
+					
+				} else {
+					
+					player.spigot().sendMessage(comp, comp2);
+					
+				}
 	
 			}
 			
