@@ -70,25 +70,45 @@ public class Main extends JavaPlugin implements Listener {
 		String ChatMessage = e.getMessage();
 		e.setCancelled(true);
 		
-		String[] chatSplit = ChatMessage.split(" ");
+		String[] chatSplit;
 		String convURL = "";
 		Boolean hasURL = false;
+		Boolean canSplit = false;
 		
-		for (int i = 0; i < chatSplit.length; i++) {
+		if (ChatMessage.contains(" ")) {
 			
-			if ((chatSplit[i].contains("https")) || (chatSplit[i].contains("http"))) {
+			chatSplit = ChatMessage.split(" ");
+			
+			for (int i = 0; i < chatSplit.length; i++) {
 				
-				convURL = chatSplit[i].toString();
-				hasURL = true;
-				break;
-				
-			} else {
-				
-				hasURL = false;
+				if ((chatSplit[i].contains("https")) || (chatSplit[i].contains("http"))) {
+					
+					convURL = chatSplit[i].toString();
+					hasURL = true;
+					canSplit = true;
+					break;
+					
+				} else {
+					
+					hasURL = false;
+					
+				}
 				
 			}
 			
+		} else  if ((!ChatMessage.contains(" ")) && (ChatMessage.contains("https")) || (ChatMessage.contains("http"))) {
+			
+			convURL = ChatMessage;
+			canSplit = false;
+			hasURL = true;
+			
+		} else {
+			
+			canSplit = false;
+			hasURL = false;
+			
 		}
+		
 		
 		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + ChatColor.BLUE + ChatColor.UNDERLINE + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
 		
@@ -117,16 +137,20 @@ public class Main extends JavaPlugin implements Listener {
 			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
-			if (hasURL.equals(true)) {
+			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
 				
 				String[] messageSplit = ChatMessage.split(convURL);
 				
 				String messageFirst = messageSplit[0].toString();
 				String messageSecond = messageSplit[1].toString();
-				messageSecond.replaceAll(convURL, "");
+				//messageSecond.replaceAll(convURL, "");
 				
 				comp2.addExtra(messageFirst);
 				comp3.addExtra(messageSecond);
+				
+			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
+				
+				comp2.addExtra(linkClickable);
 				
 			} else {
 				
@@ -136,7 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				
-				if (hasURL.equals(true)) {
+				if ((hasURL.equals(true)) && (canSplit.equals(true))) {
 					
 					player.spigot().sendMessage(rTab, comp2, linkClickable, comp3);
 					
@@ -186,16 +210,20 @@ public class Main extends JavaPlugin implements Listener {
 			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
-			if (hasURL.equals(true)) {
+			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
 				
 				String[] messageSplit = ChatMessage.split(convURL);
-				
+						
 				String messageFirst = messageSplit[0].toString();
 				String messageSecond = messageSplit[1].toString();
-				messageSecond.replaceAll(convURL, "");
+				//messageSecond.replaceAll(convURL, "");
 				
 				comp2.addExtra(messageFirst);
 				comp3.addExtra(messageSecond);
+				
+			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
+				
+				comp2.addExtra(linkClickable);
 				
 			} else {
 				
@@ -205,7 +233,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				
-				if (hasURL.equals(true)) {
+				if ((hasURL.equals(true)) && (canSplit.equals(true))) {
 					
 					player.spigot().sendMessage(comp, comp2, linkClickable, comp3);
 					
