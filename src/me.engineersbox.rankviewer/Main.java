@@ -134,7 +134,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend2));
 			
-			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
+			TextComponent comp2 = new TextComponent(prefixDefault + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
 			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
@@ -181,7 +181,7 @@ public class Main extends JavaPlugin implements Listener {
 			List<String> groups = new ArrayList<>();
 			List<String> g2 = user2.getOwnParentIdentifiers();
 			List<String> groupPrefix = new ArrayList<>();
-			String prefix = format(user2.getPrefix());
+			String prefixUser = format(user2.getPrefix());
 			
 			for (int i = 0; i < g2.size(); i++) {
 				groups.add(g2.get(i).toString());
@@ -207,7 +207,7 @@ public class Main extends JavaPlugin implements Listener {
 			comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 			linkClickable.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, convURL));
 			
-			TextComponent comp2 = new TextComponent(prefix + username + ChatColor.WHITE +": ");
+			TextComponent comp2 = new TextComponent(prefixUser + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
 			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
