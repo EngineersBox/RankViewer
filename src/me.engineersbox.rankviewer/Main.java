@@ -1,10 +1,12 @@
 package me.engineersbox.rankviewer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,7 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.util.DiscordUtil;
-
+import me.engineersbox.rankviewer.AbstractFile;
+import me.engineersbox.rankviewer.Config;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 //import net.md_5.bungee.api.ChatColor;
@@ -26,11 +29,22 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class Main extends JavaPlugin implements Listener {
 	
+	public static FileConfiguration config;
+	public static File cfile;
+	
+	//Globals
 	public static String prefix = ChatColor.AQUA + "[" + ChatColor.BLUE + "Rank Viewer" + ChatColor.AQUA + "] ";
 	
 	@Override
     public void onEnable() {
         
+		if (!getDataFolder().exists()) {
+    		getDataFolder().mkdirs();
+    		
+    	}
+    	
+    	new Config(this);
+		
     	Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getCommand("rv version").setExecutor(new Commands());
         getCommand("rv help").setExecutor(new Commands());
@@ -41,6 +55,8 @@ public class Main extends JavaPlugin implements Listener {
     
     @Override
     public void onDisable() {
+    	
+    	AbstractFile.saveConfig();
     	
     }
     
@@ -109,8 +125,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 		}
 		
-		
-		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + ChatColor.BLUE + ChatColor.UNDERLINE + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
+		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + format(Config.getData("Links.Color").toString()) + format(Config.getULine().toString()) + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
 		
 		if ((user2.inGroup("default")) && (user2.getOwnParentIdentifiers().size() < 1)) {
 			
@@ -142,11 +157,18 @@ public class Main extends JavaPlugin implements Listener {
 				String[] messageSplit = ChatMessage.split(convURL);
 				
 				String messageFirst = messageSplit[0].toString();
-				String messageSecond = messageSplit[1].toString();
-				//messageSecond.replaceAll(convURL, "");
+				if (messageSplit.length == 2) {
+					
+					String messageSecond = messageSplit[1].toString();
+					comp3.addExtra(messageSecond);
+					
+				} else {
+					
+					comp3.addExtra("");
+					
+				}
 				
 				comp2.addExtra(messageFirst);
-				comp3.addExtra(messageSecond);
 				
 			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
 				
@@ -215,11 +237,18 @@ public class Main extends JavaPlugin implements Listener {
 				String[] messageSplit = ChatMessage.split(convURL);
 						
 				String messageFirst = messageSplit[0].toString();
-				String messageSecond = messageSplit[1].toString();
-				//messageSecond.replaceAll(convURL, "");
+				if (messageSplit.length == 2) {
+					
+					String messageSecond = messageSplit[1].toString();
+					comp3.addExtra(messageSecond);
+					
+				} else {
+					
+					comp3.addExtra("");
+					
+				}
 				
 				comp2.addExtra(messageFirst);
-				comp3.addExtra(messageSecond);
 				
 			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
 				
