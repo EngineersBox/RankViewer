@@ -194,7 +194,11 @@ public class Main extends JavaPlugin implements Listener {
 	
 			}
 			
-			DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
+				
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+				
+			}
 			
 		} else {
 			
@@ -274,7 +278,12 @@ public class Main extends JavaPlugin implements Listener {
 	
 			}
 			
-			DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
+			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
+				
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
+				
+			}
+			
 		
     	}
 		
