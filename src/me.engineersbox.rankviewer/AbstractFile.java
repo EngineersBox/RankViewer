@@ -25,6 +25,7 @@ public class AbstractFile {
         }
         AbstractFile.config = YamlConfiguration.loadConfiguration(file);
         config.addDefault("Default Group Name", "defualt");
+        config.addDefault("Use group name", false);
 		config.addDefault("Links.Color", "&9");
 		config.addDefault("Links.Underline", true);
         config.options().copyDefaults(true);
