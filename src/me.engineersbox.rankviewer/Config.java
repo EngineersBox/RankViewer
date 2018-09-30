@@ -21,19 +21,35 @@ public class Config extends AbstractFile {
     	
     	Boolean booleanData = config.getBoolean("Links.Underline");
     	
-    	Object returnedData = "";
-    	
     	if (booleanData.equals(true)) {
     		
-    		returnedData = "&N";
+    		return "&N";
+    		
+    	} else if (booleanData.equals(false)) {
+    		
+    		return "";
     		
     	} else {
     		
-    		returnedData = "";
+    		return null;
     		
     	}
     	
-		return returnedData;
+    }
+    
+    public static Object getGName() {
+    	
+    	Boolean booleanData = config.getBoolean("Use group name");
+    	
+    	if (booleanData.equals(true)) {
+    		
+    		return true;
+    		
+    	} else {
+    		
+    		return false;
+    		
+    	}
     	
     }
    
