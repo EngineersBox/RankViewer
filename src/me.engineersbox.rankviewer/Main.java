@@ -76,7 +76,7 @@ public class Main extends JavaPlugin implements Listener {
     
     @EventHandler
     public static void onPlayerChat(AsyncPlayerChatEvent e) {
-		
+    	
 		Player p = e.getPlayer();
 		
 		PermissionUser user2 = PermissionsEx.getUser(p);
@@ -217,15 +217,36 @@ public class Main extends JavaPlugin implements Listener {
 			ArrayList<Object> components = new ArrayList<>();
 			
 			TextComponent comp = new TextComponent(ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "] " + ChatColor.WHITE);
-			TextComponent hoverMessage = new TextComponent(new ComponentBuilder(groupPrefix.get(0) +groups.get(0)).create());
+			TextComponent hoverMessage = new TextComponent("");
 			TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
 			
-			for (int i = 1; i < groups.size(); i++) {
+			if (Config.getGName().equals(true)) {
 				
-				hoverMessage.addExtra(newLine);
-				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i) + groups.get(i)).create()));
+				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0) + groups.get(0)).create()));
+				
+				for (int i = 1; i < groups.size(); i++) {
+					
+					hoverMessage.addExtra(newLine);
+					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i) + groups.get(i)).create()));
+					
+				}
+			} else if (Config.getGName().equals(false)) {
+				
+				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0)).create()));
+				
+				for (int i = 1; i < groups.size(); i++) {
+					
+					hoverMessage.addExtra(newLine);
+					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i)).create()));
+					
+				}
+				
+			} else {
+				
+				Bukkit.getLogger().warning("[RankViewer] Config Option 'Use group name' is not of type boolean");
 				
 			}
+			
 			
 			components.add(hoverMessage);
 			BaseComponent[] hoverToSend = (BaseComponent[])components.toArray(new BaseComponent[components.size()]);
