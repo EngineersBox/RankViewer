@@ -16,14 +16,14 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if (sender instanceof Player) {
-		    
-		    Player p = (Player) sender;
+			
+			Player p = (Player) sender;
 			
 			if (cmd.getName().equalsIgnoreCase("rv")) {
 				
 				if (args.length == 0) {
 					
-					String version = Bukkit.getServer().getPluginManager().getPlugin("BlockPalette").getDescription().getVersion();
+					String version = Bukkit.getServer().getPluginManager().getPlugin("RankViewer").getDescription().getVersion();
         			
     				p.sendMessage("");
     		    	p.sendMessage(ChatColor.GRAY + "----={<" + ChatColor.AQUA + "  [" + ChatColor.BLUE + "RankViewer Version Info" + ChatColor.AQUA + "]  " + ChatColor.GRAY + "}>=----");
