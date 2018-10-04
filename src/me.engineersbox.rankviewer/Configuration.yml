@@ -1,0 +1,9 @@
+# RankViewer Config File
+Default-Group-Name: default
+Use-Group-Name: false
+Links:
+  Color: '&9'
+  Underline: true
+Tab-Format: '&b[&cR&b]'
+Use-Main-Discord-Channel: true
+  Alternate-Channel: none
