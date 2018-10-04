@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import me.engineersbox.rankviewer.Main;
 
 public class AbstractFile {
@@ -24,10 +25,15 @@ public class AbstractFile {
             }
         }
         AbstractFile.config = YamlConfiguration.loadConfiguration(file);
-        config.addDefault("Default Group Name", "defualt");
-        config.addDefault("Use group name", false);
+        config.options().header("RankViewer Config File");
+        config.addDefault("Default-Group-Name", "default");
+        config.addDefault("Use-Group-Name", false);
 		config.addDefault("Links.Color", "&9");
 		config.addDefault("Links.Underline", true);
+		config.addDefault("Tab-Format", "&b[&cR&b]");
+		config.addDefault("Discord-Config.Use-Main-Discord-Channel", true);
+		config.addDefault("Discord-Config.Alternate-Channel", "none");
+		config.options().copyHeader(true);
         config.options().copyDefaults(true);
         AbstractFile.saveConfig();
     }
