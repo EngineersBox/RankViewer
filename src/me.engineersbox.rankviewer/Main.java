@@ -138,18 +138,16 @@ public class Main extends JavaPlugin implements Listener {
 			*/ //debug
 			
 			String prefixDefault = format(user2.getPrefix());
-			
 			ArrayList<Object> components2 = new ArrayList<>();
 			
-			TextComponent rTab = new TextComponent(ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "] " + ChatColor.WHITE);
+			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
 			TextComponent hoverMessage2 = new TextComponent(new ComponentBuilder(prefixDefault + "No Rank").create());
-			
 			components2.add(hoverMessage2);
 			BaseComponent[] hoverToSend2 = (BaseComponent[])components2.toArray(new BaseComponent[components2.size()]);
 			
 			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend2));
 			
-			TextComponent comp2 = new TextComponent(prefixDefault + username + ChatColor.WHITE +": ");
+			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixDefault) + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
 			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
@@ -196,7 +194,19 @@ public class Main extends JavaPlugin implements Listener {
 			
 			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
 				
-				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+				if (Config.getDCConfig().equals(true)) {
+					
+					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+					
+				} else if (Config.getDCConfig().equals(false)) {
+					
+					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), username + " » " + ChatMessage);
+					
+				} else {
+					
+					Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
+					
+				}
 				
 			}
 			
@@ -216,7 +226,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 			ArrayList<Object> components = new ArrayList<>();
 			
-			TextComponent comp = new TextComponent(ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "] " + ChatColor.WHITE);
+			TextComponent comp = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
 			TextComponent hoverMessage = new TextComponent("");
 			TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
 			
@@ -254,7 +264,7 @@ public class Main extends JavaPlugin implements Listener {
 			comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 			linkClickable.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, convURL));
 			
-			TextComponent comp2 = new TextComponent(prefixUser + username + ChatColor.WHITE +": ");
+			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixUser) + username + ChatColor.WHITE +": ");
 			TextComponent comp3 = new TextComponent();
 			
 			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
@@ -301,7 +311,19 @@ public class Main extends JavaPlugin implements Listener {
 			
 			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
 				
-				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
+				if (Config.getDCConfig().equals(true)) {
+					
+					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
+					
+				} else if (Config.getDCConfig().equals(false)) {
+					
+					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
+					
+				} else {
+					
+					Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
+					
+				}
 				
 			}
 			
