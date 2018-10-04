@@ -39,7 +39,7 @@ public class Config extends AbstractFile {
     
     public static Object getGName() {
     	
-    	Boolean booleanData = config.getBoolean("Use group name");
+    	Boolean booleanData = config.getBoolean("Use-Group-Name");
     	
     	if (booleanData.equals(true)) {
     		
@@ -50,6 +50,36 @@ public class Config extends AbstractFile {
     		return false;
     		
     	}
+    	
+    }
+    
+    public static Object getTabFormat() {
+    	
+    	Object format = config.get("Tab-Format");
+    	Object default_format = "&b[&cR&b]";
+    	
+    	if (format.toString().trim().length() > 0) {
+    		
+    		return format;
+    		
+    	} else {
+    		
+    		return default_format;
+    		
+    	}
+    	
+    	
+    }
+    
+    public static Object getDCConfig() {
+    	
+    	return config.getBoolean("Discord-Config.Use-Main-Discord-Channel");
+    	
+    }
+    
+    public static Object getDCChannel() {
+    	
+    	return config.get("Discord-Config.Alternate-Channel");
     	
     }
    
