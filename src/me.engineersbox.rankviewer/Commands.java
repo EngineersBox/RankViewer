@@ -21,7 +21,7 @@ public class Commands implements CommandExecutor {
 			
 			if (cmd.getName().equalsIgnoreCase("rv")) {
 				
-				if (args.length == 0) {
+				if ((args.length == 0) && (p.hasPermission("rv.use"))) {
 					
 					String version = Bukkit.getServer().getPluginManager().getPlugin("RankViewer").getDescription().getVersion();
         			
