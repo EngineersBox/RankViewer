@@ -19,7 +19,6 @@ import me.engineersbox.rankviewer.AbstractFile;
 import me.engineersbox.rankviewer.Config;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
-//import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -192,7 +191,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 			}
 			
-			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
+			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
 				
 				if (Config.getDCConfig().equals(true)) {
 					
@@ -213,16 +212,10 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			
 			//p.sendMessage("Has groups");	//debug
-		
-			List<String> groups = new ArrayList<>();
-			List<String> g2 = user2.getOwnParentIdentifiers();
-			List<String> groupPrefix = new ArrayList<>();
-			String prefixUser = format(user2.getPrefix());
 			
-			for (int i = 0; i < g2.size(); i++) {
-				groups.add(g2.get(i).toString());
-				groupPrefix.add(format(user2.getParents().get(i).getPrefix()));
-			}
+			List<String> groups = GroupPlugins.pexGetGroups(p);
+			List<String> groupPrefix = GroupPlugins.pexGetGroupPrefixes(p);
+			String prefixUser = format(user2.getPrefix());
 			
 			ArrayList<Object> components = new ArrayList<>();
 			
@@ -240,6 +233,7 @@ public class Main extends JavaPlugin implements Listener {
 					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i) + groups.get(i)).create()));
 					
 				}
+				
 			} else if (Config.getGName().equals(false)) {
 				
 				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0)).create()));
@@ -309,7 +303,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 			}
 			
-			if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
+			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
 				
 				if (Config.getDCConfig().equals(true)) {
 					
