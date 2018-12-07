@@ -68,7 +68,6 @@ public class Config extends AbstractFile {
     		
     	}
     	
-    	
     }
     
     public static Object getDCConfig() {
