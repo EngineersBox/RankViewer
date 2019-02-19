@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import me.engineersbox.rankviewer.AbstractFile;
 import me.engineersbox.rankviewer.Config;
+import me.lucko.luckperms.api.LuckPermsApi;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -33,6 +35,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	//Globals
 	public static String prefix = ChatColor.AQUA + "[" + ChatColor.BLUE + "Rank Viewer" + ChatColor.AQUA + "] ";
+	public static LuckPermsApi api;
 	
 	@Override
     public void onEnable() {
@@ -41,6 +44,12 @@ public class Main extends JavaPlugin implements Listener {
     		getDataFolder().mkdirs();
     		
     	}
+		
+		RegisteredServiceProvider<LuckPermsApi> provider = Bukkit.getServicesManager().getRegistration(LuckPermsApi.class);
+		if (provider != null) {
+		    api = provider.getProvider();
+		    
+		}
     	
     	new Config(this);
 		
@@ -62,13 +71,18 @@ public class Main extends JavaPlugin implements Listener {
     public static String format(String msg) {
     	
 		String coloredMsg = "";
-		for(int i = 0; i < msg.length(); i++)
-		{
-		    if(msg.charAt(i) == '&')
-		        coloredMsg += '§';
-		    else
-		        coloredMsg += msg.charAt(i);
+		if (msg != null) {
+			for(int i = 0; i < msg.length(); i++)
+			{
+			    if(msg.charAt(i) == '&')
+			        coloredMsg += '§';
+			    else
+			        coloredMsg += msg.charAt(i);
+			}
+		} else {
+			coloredMsg = "§f";
 		}
+
 		return coloredMsg;
     	
     }
@@ -78,9 +92,19 @@ public class Main extends JavaPlugin implements Listener {
     	
 		Player p = e.getPlayer();
 		
-		PermissionUser user2 = PermissionsEx.getUser(p);
-		
-		String username = user2.getName();
+		//TODO: get user instance for both LP and PEX
+		PermissionUser user2 = null;
+		String username = null;
+		boolean pluginPex = false;
+		boolean pluginLp = false;
+		if (Bukkit.getPluginManager().getPlugin("PermissionsEx") != null) {
+			user2 = PermissionsEx.getUser(p);
+			username = user2.getName();
+			pluginPex = true;
+		} else if (Bukkit.getPluginManager().getPlugin("LuckPerms") != null) {
+			username = p.getName();
+			pluginLp = true;
+		}
 		
 		String ChatMessage = e.getMessage();
 		e.setCancelled(true);
@@ -126,17 +150,14 @@ public class Main extends JavaPlugin implements Listener {
 		
 		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + format(Config.getData("Links.Color").toString()) + format(Config.getULine().toString()) + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
 		
-		if ((user2.inGroup("default")) && (user2.getOwnParentIdentifiers().size() < 1)) {
+		if (((pluginPex == true) && (user2.inGroup("visitor")) && (user2.getOwnParentIdentifiers().size() < 1)) | ((pluginLp == true) && (GroupPlugins.lpInGroup(p, "visitor")) && (GroupPlugins.lpGetGroupCount(p) < 1))) {
 			
-			/*p.sendMessage("no groups");
-			List<String> g1 = user2.getOwnParentIdentifiers();
-			for (int i = 0; i < g1.size(); i++) {
-				p.sendMessage(g1.get(i).toString());
+			String prefixDefault = null;
+			if (pluginPex == true) {
+				prefixDefault = format(user2.getPrefix());
+			} else if (pluginLp == true) {
+				prefixDefault = GroupPlugins.lpGetGroupPrefixes(p).get(0);
 			}
-			p.sendMessage(g1.toString());
-			*/ //debug
-			
-			String prefixDefault = format(user2.getPrefix());
 			ArrayList<Object> components2 = new ArrayList<>();
 			
 			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
@@ -191,6 +212,16 @@ public class Main extends JavaPlugin implements Listener {
 	
 			}
 			
+			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
+				
+				Bukkit.getConsoleSender().sendMessage(prefixDefault + comp2.toString() + linkClickable.toString() + comp3.toString());
+				
+			} else {
+				
+				Bukkit.getConsoleSender().sendMessage(prefixDefault + comp2.toString());
+				
+			}
+			
 			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
 				
 				if (Config.getDCConfig().equals(true)) {
@@ -213,9 +244,18 @@ public class Main extends JavaPlugin implements Listener {
 			
 			//p.sendMessage("Has groups");	//debug
 			
-			List<String> groups = GroupPlugins.pexGetGroups(p);
-			List<String> groupPrefix = GroupPlugins.pexGetGroupPrefixes(p);
-			String prefixUser = format(user2.getPrefix());
+			List<String> groups = null;
+			List<String> groupPrefix = null;
+			String prefixUser = null;
+			if (pluginPex == true) {
+				prefixUser = format(user2.getPrefix());
+				groups = GroupPlugins.pexGetGroups(p);
+				groupPrefix = GroupPlugins.pexGetGroupPrefixes(p);
+			} else if (pluginLp == true) {
+				prefixUser = GroupPlugins.lpGetUserPrefix(p);
+				groups = GroupPlugins.lpGetGroups(p);
+				groupPrefix = GroupPlugins.lpGetGroupPrefixes(p);
+			}
 			
 			ArrayList<Object> components = new ArrayList<>();
 			
@@ -301,6 +341,16 @@ public class Main extends JavaPlugin implements Listener {
 					
 				}
 	
+			}
+			
+			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
+				
+				Bukkit.getConsoleSender().sendMessage(groupPrefix.get(0) + comp2.toLegacyText() + linkClickable.toLegacyText() + comp3.toLegacyText());
+				
+			} else {
+				
+				Bukkit.getConsoleSender().sendMessage(groupPrefix.get(0) + comp2.toLegacyText());
+				
 			}
 			
 			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
