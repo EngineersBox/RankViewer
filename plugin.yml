@@ -1,6 +1,6 @@
 name: RankViewer
 main: me.engineersbox.rankviewer.Main
-version: 1.11.2
+version: 1.2
 author: EngineersBox
 commands:
     rv:
@@ -12,7 +12,7 @@ commands:
         usage: /rv version
         permission: rv.version
     rv help:
-        description: Displays Plugin Version Information
+        description: Displays Plugin Help Information
         usage: /rv help
         permission: rv.help
     rv reload:
@@ -21,12 +21,13 @@ commands:
         permission: rv.reload
 permissions:
     rv.*:
-        description: Gives Access To All RankViewer Commands
+        description: Gives Access To All RankViewer Permissions
         children:
         rv.version: true
         rv.help: true
         rv.reload: true
         rv.use: true
+        rv.discord: true
     rv.version:
         description: Gives Access To View Current Plugin Version
         default: true
@@ -38,4 +39,7 @@ permissions:
         default: false
     rv.use:
         description: Alias for rv.help
+        default: true
+    rv.discord:
+        description: Allow Messages To Be Sent To Discord Channel Target
         default: true
