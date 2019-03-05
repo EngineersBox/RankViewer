@@ -12,12 +12,11 @@ public class Config extends AbstractFile {
 
     public static Object getData(String data) {
     
-    	Object returnedData = config.get(data);
-    	return returnedData;
+    	return config.get(data);
     	
     }
     
-    public static Object getULine() {
+    public static String getULine() {
     	
     	Boolean booleanData = config.getBoolean("Links.Underline");
     	
@@ -37,7 +36,7 @@ public class Config extends AbstractFile {
     	
     }
     
-    public static Object getGName() {
+    public static Boolean getGName() {
     	
     	Boolean booleanData = config.getBoolean("Use-Group-Name");
     	
@@ -51,6 +50,16 @@ public class Config extends AbstractFile {
     		
     	}
     	
+    }
+    
+    public static Object getDefaultGroup() {
+    	Object defaultGroup = config.get("Default-Group-Name");
+    	
+    	if (defaultGroup.toString().trim().length() > 0) {
+    		return defaultGroup;
+    	} else {
+    		return "default";
+    	}
     }
     
     public static Object getTabFormat() {
@@ -68,9 +77,10 @@ public class Config extends AbstractFile {
     		
     	}
     	
+    	
     }
     
-    public static Object getDCConfig() {
+    public static Boolean getDCConfig() {
     	
     	return config.getBoolean("Discord-Config.Use-Main-Discord-Channel");
     	
