@@ -1,6 +1,6 @@
 name: RankViewer
 main: me.engineersbox.rankviewer.Main
-version: 1.14
+version: 1.15
 author: EngineersBox
 commands:
     rv:
