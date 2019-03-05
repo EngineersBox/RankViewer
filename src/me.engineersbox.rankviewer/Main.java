@@ -92,7 +92,6 @@ public class Main extends JavaPlugin implements Listener {
     	
 		Player p = e.getPlayer();
 		
-		//TODO: get user instance for both LP and PEX
 		PermissionUser user2 = null;
 		String username = null;
 		boolean pluginPex = false;
@@ -150,7 +149,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + format(Config.getData("Links.Color").toString()) + format(Config.getULine().toString()) + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
 		
-		if (((pluginPex == true) && (user2.inGroup("visitor")) && (user2.getOwnParentIdentifiers().size() < 1)) | ((pluginLp == true) && (GroupPlugins.lpInGroup(p, "visitor")) && (GroupPlugins.lpGetGroupCount(p) < 1))) {
+		if (((pluginPex == true) && (user2.inGroup(Config.getDefaultGroup().toString())) && (user2.getOwnParentIdentifiers().size() < 1)) | ((pluginLp == true) && (GroupPlugins.lpInGroup(p, Config.getDefaultGroup().toString())) && (GroupPlugins.lpGetGroupCount(p) < 1))) {
 			
 			String prefixDefault = null;
 			if (pluginPex == true) {
