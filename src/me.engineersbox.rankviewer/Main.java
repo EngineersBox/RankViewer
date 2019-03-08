@@ -18,6 +18,8 @@ import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import me.engineersbox.rankviewer.AbstractFile;
 import me.engineersbox.rankviewer.Config;
+import me.engineersbox.rankviewer.updater.SpigotUpdater;
+import me.engineersbox.rankviewer.updater.Updaters;
 import me.lucko.luckperms.api.LuckPermsApi;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -44,14 +46,19 @@ public class Main extends JavaPlugin implements Listener {
     		getDataFolder().mkdirs();
     		
     	}
-		
-		RegisteredServiceProvider<LuckPermsApi> provider = Bukkit.getServicesManager().getRegistration(LuckPermsApi.class);
-		if (provider != null) {
-		    api = provider.getProvider();
-		    
+		try {
+			RegisteredServiceProvider<LuckPermsApi> provider = Bukkit.getServicesManager().getRegistration(LuckPermsApi.class);
+			if (provider != null) {
+				api = provider.getProvider();
+			}
+		} catch (NoClassDefFoundError e) {
+			//None
 		}
     	
     	new Config(this);
+    	
+    	SpigotUpdater updater = new SpigotUpdater(this, 61256);
+    	Updaters.checkVersion(updater);
 		
     	Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getCommand("rv version").setExecutor(new Commands());
@@ -60,7 +67,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("rv").setExecutor(new Commands());
         
     }
-    
+	
     @Override
     public void onDisable() {
     	
