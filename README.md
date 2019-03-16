@@ -41,15 +41,15 @@ Drag and drop the most recent version of the plugin into your plugins folder. Re
 
 The config file contains:
 
-> \# RankViewer Config File
-> Default-Group-Name: default
-> Use-Group-Name: false
-> Links:
-> &nbsp;&nbsp;Color: '\&9'
-> &nbsp;&nbsp;Underline: true
-> Tab-Format: '\&b\[\&cR\&b\]'
-> Discord-Config:
-> &nbsp;&nbsp;Use-Main-Discord-Channel: true
+> \# RankViewer Config File\
+> Default-Group-Name: default\
+> Use-Group-Name: false\
+> Links:\
+> &nbsp;&nbsp;Color: '\&9'\
+> &nbsp;&nbsp;Underline: true\
+> Tab-Format: '\&b\[\&cR\&b\]'\
+> Discord-Config:\
+> &nbsp;&nbsp;Use-Main-Discord-Channel: true\
  >&nbsp;&nbsp;Alternate-Channel: none
 
 Here you can specify:
