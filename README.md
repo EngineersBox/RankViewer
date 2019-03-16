@@ -1,4 +1,5 @@
 # Rank Viewer
+<img src="https://media.forgecdn.net/avatars/172/971/636740312425938945.png" width=100px height=100px>
 
 ## Features
 This plugin allows users to display ranks as a hoverable tag like this: [R] in order to see their respective ranks. It has integration with the discord API (DiscordSRV), ensuring there is no disruption with the messages sent to the discord server. Note that this requires the DiscordSRV plugin, which is automatically detected by RankViewer.The application logs the user's location and any user with permissions can teleport to the location to view a build relating to the application (for example). Another option is to log the location of the plot the user is currently in (Requires PlotSquared dependency).
