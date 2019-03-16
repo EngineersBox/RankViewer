@@ -7,11 +7,11 @@ The plugin supports users having multiple ranks, and can display them all in the
 
 Allows all colour codes and text changes such as italics, bold, obfuscation, etc. Currently only works with PermissionsEx and LuckPerms, however support of other rank plugins will be made available in future updates.
 
-The hoverable tab:
+The hoverable tab:\
+![Hoverable Tab](https://preview.ibb.co/mPQ7zK/example_rv1.png)
 
-
-The content of the tab:
-
+The content of the tab:\
+![Tab Content](https://preview.ibb.co/bJZBRz/example_rv2.png)
 
 ---
 
