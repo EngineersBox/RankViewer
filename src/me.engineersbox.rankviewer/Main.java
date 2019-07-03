@@ -114,47 +114,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		String ChatMessage = e.getMessage();
 		e.setCancelled(true);
-		
-		String[] chatSplit;
-		String convURL = "";
-		Boolean hasURL = false;
-		Boolean canSplit = false;
-		
-		if (ChatMessage.contains(" ")) {
-			
-			chatSplit = ChatMessage.split(" ");
-			
-			for (int i = 0; i < chatSplit.length; i++) {
-				
-				if ((chatSplit[i].contains("https")) || (chatSplit[i].contains("http"))) {
-					
-					convURL = chatSplit[i].toString();
-					hasURL = true;
-					canSplit = true;
-					break;
-					
-				} else {
-					
-					hasURL = false;
-					
-				}
-				
-			}
-			
-		} else  if ((!ChatMessage.contains(" ")) && (ChatMessage.contains("https")) || (ChatMessage.contains("http"))) {
-			
-			convURL = ChatMessage;
-			canSplit = false;
-			hasURL = true;
-			
-		} else {
-			
-			canSplit = false;
-			hasURL = false;
-			
-		}
-		
-		TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + format(Config.getData("Links.Color").toString()) + format(Config.getULine().toString()) + convURL + "\",clickEvent:{action:open_url,value:\"" + convURL + "\"}}"));
+		String[] chatSplit = ChatMessage.split(" ");
+		TextComponent msgToPlayer = new TextComponent();
+		String bukkitConsoleText = "";
 		
 		if (((pluginPex == true) && (user2.inGroup(Config.getDefaultGroup().toString())) && (user2.getOwnParentIdentifiers().size() < 1)) | ((pluginLp == true) && (GroupPlugins.lpInGroup(p, Config.getDefaultGroup().toString())) && (GroupPlugins.lpGetGroupCount(p) < 1))) {
 			
@@ -164,91 +126,23 @@ public class Main extends JavaPlugin implements Listener {
 			} else if (pluginLp == true) {
 				prefixDefault = GroupPlugins.lpGetGroupPrefixes(p).get(0);
 			}
-			ArrayList<Object> components2 = new ArrayList<>();
+			ArrayList<Object> components = new ArrayList<>();
 			
 			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
-			TextComponent hoverMessage2 = new TextComponent(new ComponentBuilder(prefixDefault + "No Rank").create());
-			components2.add(hoverMessage2);
-			BaseComponent[] hoverToSend2 = (BaseComponent[])components2.toArray(new BaseComponent[components2.size()]);
+			TextComponent hoverMessage = new TextComponent(new ComponentBuilder(prefixDefault + "No Rank").create());
+			components.add(hoverMessage);
+			BaseComponent[] hoverToSend = (BaseComponent[]) components.toArray(new BaseComponent[components.size()]);
 			
-			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend2));
+			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 			
 			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixDefault) + username + ChatColor.WHITE +": ");
-			TextComponent comp3 = new TextComponent();
 			
-			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-				
-				String[] messageSplit = ChatMessage.split(convURL);
-				
-				String messageFirst = messageSplit[0].toString();
-				if (messageSplit.length == 2) {
-					
-					String messageSecond = messageSplit[1].toString();
-					comp3.addExtra(messageSecond);
-					
-				} else {
-					
-					comp3.addExtra("");
-					
-				}
-				
-				comp2.addExtra(messageFirst);
-				
-			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
-				
-				comp2.addExtra(linkClickable);
-				
-			} else {
-				
-				comp2.addExtra(ChatMessage);
-				
-			}
-	
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				
-				if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-					
-					player.spigot().sendMessage(rTab, comp2, linkClickable, comp3);
-					
-				} else {
-					
-					player.spigot().sendMessage(rTab, comp2);
-					
-				}
-	
-			}
+			msgToPlayer.addExtra(rTab);
+			msgToPlayer.addExtra(comp2);
 			
-			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-				
-				Bukkit.getConsoleSender().sendMessage(prefixDefault + comp2.toString() + linkClickable.toString() + comp3.toString());
-				
-			} else {
-				
-				Bukkit.getConsoleSender().sendMessage(prefixDefault + comp2.toString());
-				
-			}
-			
-			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
-				
-				if (Config.getDCConfig().equals(true)) {
-					
-					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
-					
-				} else if (Config.getDCConfig().equals(false)) {
-					
-					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), username + " » " + ChatMessage);
-					
-				} else {
-					
-					Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
-					
-				}
-				
-			}
+			bukkitConsoleText += prefixDefault + comp2.toLegacyText();
 			
 		} else {
-			
-			//p.sendMessage("Has groups");	//debug
 			
 			List<String> groups = null;
 			List<String> groupPrefix = null;
@@ -265,7 +159,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 			ArrayList<Object> components = new ArrayList<>();
 			
-			TextComponent comp = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
+			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
 			TextComponent hoverMessage = new TextComponent("");
 			TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
 			
@@ -274,10 +168,8 @@ public class Main extends JavaPlugin implements Listener {
 				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0) + groups.get(0)).create()));
 				
 				for (int i = 1; i < groups.size(); i++) {
-					
 					hoverMessage.addExtra(newLine);
 					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i) + groups.get(i)).create()));
-					
 				}
 				
 			} else if (Config.getGName().equals(false)) {
@@ -285,100 +177,64 @@ public class Main extends JavaPlugin implements Listener {
 				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0)).create()));
 				
 				for (int i = 1; i < groups.size(); i++) {
-					
 					hoverMessage.addExtra(newLine);
 					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i)).create()));
-					
 				}
 				
 			} else {
-				
 				Bukkit.getLogger().warning("[RankViewer] Config Option 'Use group name' is not of type boolean");
-				
 			}
-			
 			
 			components.add(hoverMessage);
 			BaseComponent[] hoverToSend = (BaseComponent[])components.toArray(new BaseComponent[components.size()]);
-			
-			comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
-			linkClickable.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, convURL));
-			
+			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixUser) + username + ChatColor.WHITE +": ");
-			TextComponent comp3 = new TextComponent();
 			
-			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-				
-				String[] messageSplit = ChatMessage.split(convURL);
-						
-				String messageFirst = messageSplit[0].toString();
-				if (messageSplit.length == 2) {
-					
-					String messageSecond = messageSplit[1].toString();
-					comp3.addExtra(messageSecond);
-					
-				} else {
-					
-					comp3.addExtra("");
-					
-				}
-				
-				comp2.addExtra(messageFirst);
-				
-			} else if ((hasURL.equals(true)) && (canSplit.equals(false))) {
-				
-				comp2.addExtra(linkClickable);
-				
-			} else {
-				
-				comp2.addExtra(ChatMessage);
-				
-			};
-	
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				
-				if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-					
-					player.spigot().sendMessage(comp, comp2, linkClickable, comp3);
-					
-				} else {
-					
-					player.spigot().sendMessage(comp, comp2);
-					
-				}
-	
-			}
+			msgToPlayer.addExtra(rTab);
+			msgToPlayer.addExtra(comp2);
 			
-			if ((hasURL.equals(true)) && (canSplit.equals(true))) {
-				
-				Bukkit.getConsoleSender().sendMessage(groupPrefix.get(0) + comp2.toLegacyText() + linkClickable.toLegacyText() + comp3.toLegacyText());
-				
-			} else {
-				
-				Bukkit.getConsoleSender().sendMessage(groupPrefix.get(0) + comp2.toLegacyText());
-				
-			}
+			bukkitConsoleText += prefixUser + comp2.toLegacyText();
 			
-			if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
-				
-				if (Config.getDCConfig().equals(true)) {
-					
-					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
-					
-				} else if (Config.getDCConfig().equals(false)) {
-					
-					DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), "**" + groups.get(0).toString() + "** " + username + " » " + ChatMessage);
-					
-				} else {
-					
-					Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
-					
-				}
-				
-			}
-			
+		}
 		
-    	}
+		for (String val : chatSplit) {
+			
+			if ((val.contains("https://")) || (val.contains("http://")) || (val.contains("www."))) {
+				TextComponent linkClickable = new TextComponent(ComponentSerializer.parse("{text: \"" + format(Config.getData("Links.Color").toString()) + format(Config.getULine().toString()) + val + "\",clickEvent:{action:open_url,value:\"" + val + "\"}} "));
+				linkClickable.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, val));
+				msgToPlayer.addExtra(linkClickable);
+				msgToPlayer.addExtra(ChatColor.RESET + " " + ChatColor.WHITE);
+				bukkitConsoleText += linkClickable.toLegacyText();
+			} else {
+				TextComponent msgContent = new TextComponent(new ComponentBuilder(format(val)).create());
+				msgToPlayer.addExtra(msgContent);
+				msgToPlayer.addExtra(" ");
+				bukkitConsoleText += msgContent.toLegacyText();
+			}
+			
+		}
+		
+		
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			
+			player.spigot().sendMessage(msgToPlayer);
+
+		}
+		
+		Bukkit.getConsoleSender().sendMessage(bukkitConsoleText);
+		
+		if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
+			
+			if (Config.getDCConfig().equals(true)) {
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+			} else if (Config.getDCConfig().equals(false)) {
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), username + " » " + ChatMessage);
+			} else {
+				Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
+			}
+			
+		}		
+		
 		
 	}
     
