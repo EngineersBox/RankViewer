@@ -1,6 +1,6 @@
 name: RankViewer
 main: me.engineersbox.rankviewer.Main
-version: 1.17
+version: 2.0
 author: EngineersBox
 commands:
     rv:
@@ -15,6 +15,10 @@ commands:
         description: Displays Plugin Help Information
         usage: /rv help
         permission: rv.help
+    rv userank:
+        description: Enables or disables the [R] prefix with rank name
+        usage: /rv userank <enable/disable>
+        permission: rv.userank
     rv reload:
         description: Reloads The Plugin
         usage: /rv reload
@@ -27,6 +31,7 @@ permissions:
         rv.help: true
         rv.reload: true
         rv.use: true
+        rv.userank: true
         rv.discord: true
     rv.version:
         description: Gives Access To View Current Plugin Version
@@ -36,7 +41,10 @@ permissions:
         default: true
     rv.reload:
         description: Gives Access To Reload The Pugin
-        default: false
+        default: op
+    rv.userank:
+        description: Allows the use of the useRank command
+        default: op
     rv.use:
         description: Alias for rv.help
         default: true
