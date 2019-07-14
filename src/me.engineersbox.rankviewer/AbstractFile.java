@@ -30,7 +30,8 @@ public class AbstractFile {
         config.addDefault("Use-Group-Name", false);
 		config.addDefault("Links.Color", "&9");
 		config.addDefault("Links.Underline", true);
-		config.addDefault("Tab-Format", "&b[&cR&b]");
+		config.addDefault("Tab-Config.Format", "&b[&cR&b]");
+		config.addDefault("Tab-Config.Use-RankName", false);
 		config.addDefault("Discord-Config.Use-Main-Discord-Channel", true);
 		config.addDefault("Discord-Config.Alternate-Channel", "none");
 		config.options().copyHeader(true);
