@@ -56,12 +56,33 @@ public class Commands implements CommandExecutor {
 		            	p.sendMessage("");
 				    	p.sendMessage(ChatColor.GRAY + "----={<" + ChatColor.AQUA + "  [" + ChatColor.BLUE + "RankViewer Help" + ChatColor.AQUA + "]  " + ChatColor.GRAY + "}>=----");
 				    	p.sendMessage("");
-		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv version " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Displays The Plugin Version And Author");
-		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv reload " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Reloads The Plugin");
-		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv help " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Opens This Menu");
+		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv version " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Displays the plugin version and author");
+		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv reload " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Reloads the plugin");
+		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv userank <enable/disable> " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Switches between "+ ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "]" + ChatColor.DARK_RED + " prefix and rank name prefix");
+		            	p.sendMessage(ChatColor.BLACK + "> " + ChatColor.DARK_GREEN + "/rv help " + ChatColor.WHITE + ":: " + ChatColor.DARK_RED + "Opens this menu");
 				    	p.sendMessage("");
 				    	p.sendMessage(ChatColor.GRAY + "----=<{" + ChatColor.AQUA + "  [" + ChatColor.BLUE + "RankViewer Help" + ChatColor.AQUA + "]  " + ChatColor.GRAY + "}>=----");
 				    	p.sendMessage("");
+					
+					} else if ((args[0].equalsIgnoreCase("userank")) && (p.hasPermission("rv.userank"))) {
+				    	
+						if (args[1].equalsIgnoreCase("enable")) {
+							if (Config.useRankName()) {
+								p.sendMessage(Main.prefix + ChatColor.DARK_PURPLE + "Already enabled!");
+							} else {
+								Config.setRankName(true);
+								p.sendMessage(Main.prefix + ChatColor.DARK_GREEN + "Using rank name for hoverable prefix");
+							}
+						} else if (args[1].equalsIgnoreCase("disable")) {
+							if (Config.useRankName()) {
+								Config.setRankName(false);
+								p.sendMessage(Main.prefix + ChatColor.DARK_GREEN + "Using " + ChatColor.AQUA + "[" + ChatColor.RED + "R" + ChatColor.AQUA + "]" + ChatColor.DARK_GREEN + " as hoverable prefix");
+							} else {
+								p.sendMessage(Main.prefix + ChatColor.DARK_PURPLE + "Already disabled!");
+							}
+						} else {
+							
+						}
 						
 					} else if ((args[0].equalsIgnoreCase("reload")) && (p.hasPermission("rv.reload"))) {
 					
