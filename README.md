@@ -48,7 +48,9 @@ The config file contains:
 > Links:\
 > &nbsp;&nbsp;Color: '\&9'\
 > &nbsp;&nbsp;Underline: true\
-> Tab-Format: '\&b\[\&cR\&b\]'\
+> Tab-Config:\
+> &nbsp;Format: '\&b\[\&cR\&b\]'\
+> &nbsp;Use-RankName: true\
 > Discord-Config:\
 > &nbsp;&nbsp;Use-Main-Discord-Channel: true\
  >&nbsp;&nbsp;Alternate-Channel: none
