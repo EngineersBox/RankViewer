@@ -64,6 +64,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("rv version").setExecutor(new Commands());
         getCommand("rv help").setExecutor(new Commands());
         getCommand("rv reload").setExecutor(new Commands());
+        getCommand("rv userank").setExecutor(new Commands());
         getCommand("rv").setExecutor(new Commands());
         
     }
@@ -103,6 +104,7 @@ public class Main extends JavaPlugin implements Listener {
 		String username = null;
 		boolean pluginPex = false;
 		boolean pluginLp = false;
+		String prefixUser = null;
 		if (Bukkit.getPluginManager().getPlugin("PermissionsEx") != null) {
 			user2 = PermissionsEx.getUser(p);
 			username = user2.getName();
@@ -120,33 +122,36 @@ public class Main extends JavaPlugin implements Listener {
 		
 		if (((pluginPex == true) && (user2.inGroup(Config.getDefaultGroup().toString())) && (user2.getOwnParentIdentifiers().size() < 1)) | ((pluginLp == true) && (GroupPlugins.lpInGroup(p, Config.getDefaultGroup().toString())) && (GroupPlugins.lpGetGroupCount(p) < 1))) {
 			
-			String prefixDefault = null;
 			if (pluginPex == true) {
-				prefixDefault = format(user2.getPrefix());
+				prefixUser = format(user2.getPrefix());
 			} else if (pluginLp == true) {
-				prefixDefault = GroupPlugins.lpGetGroupPrefixes(p).get(0);
+				prefixUser = GroupPlugins.lpGetGroupPrefixes(p).get(0);
 			}
 			ArrayList<Object> components = new ArrayList<>();
 			
-			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
-			TextComponent hoverMessage = new TextComponent(new ComponentBuilder(prefixDefault + "No Rank").create());
+			TextComponent rTab = null;
+			if (Config.useRankName()) {
+				rTab = new TextComponent(format(prefixUser) + " ");
+			} else {
+				rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
+			}
+			TextComponent hoverMessage = new TextComponent(new ComponentBuilder(prefixUser + "No Rank").create());
 			components.add(hoverMessage);
 			BaseComponent[] hoverToSend = (BaseComponent[]) components.toArray(new BaseComponent[components.size()]);
 			
 			rTab.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverToSend));
 			
-			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixDefault) + username + ChatColor.WHITE +": ");
+			TextComponent comp2 = new TextComponent(ChatColor.getLastColors(prefixUser) + username + ChatColor.WHITE +": ");
 			
 			msgToPlayer.addExtra(rTab);
 			msgToPlayer.addExtra(comp2);
 			
-			bukkitConsoleText += prefixDefault + comp2.toLegacyText();
+			bukkitConsoleText += prefixUser + comp2.toLegacyText();
 			
 		} else {
 			
 			List<String> groups = null;
 			List<String> groupPrefix = null;
-			String prefixUser = null;
 			if (pluginPex == true) {
 				prefixUser = format(user2.getPrefix());
 				groups = GroupPlugins.pexGetGroups(p);
@@ -159,26 +164,39 @@ public class Main extends JavaPlugin implements Listener {
 			
 			ArrayList<Object> components = new ArrayList<>();
 			
-			TextComponent rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
+			TextComponent rTab = null;
+			if (Config.useRankName()) {
+				rTab = new TextComponent(format(prefixUser) + " ");
+			} else {
+				rTab = new TextComponent(format(Config.getTabFormat().toString()) + " " + ChatColor.WHITE);
+			}
 			TextComponent hoverMessage = new TextComponent("");
 			TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
 			
 			if (Config.getGName().equals(true)) {
-				
-				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0) + groups.get(0)).create()));
+				if (!Config.useRankName()) {
+					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0) + groups.get(0)).create()));
+					hoverMessage.addExtra(newLine);
+				}
 				
 				for (int i = 1; i < groups.size(); i++) {
-					hoverMessage.addExtra(newLine);
 					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i) + groups.get(i)).create()));
+					if (i != groups.size() - 1) {
+						hoverMessage.addExtra(newLine);
+					}
 				}
 				
 			} else if (Config.getGName().equals(false)) {
-				
-				hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0)).create()));
+				if (!Config.useRankName()) {
+					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(0)).create()));
+					hoverMessage.addExtra(newLine);
+				}
 				
 				for (int i = 1; i < groups.size(); i++) {
-					hoverMessage.addExtra(newLine);
 					hoverMessage.addExtra(new TextComponent(new ComponentBuilder(groupPrefix.get(i)).create()));
+					if (i != groups.size() - 1) {
+						hoverMessage.addExtra(newLine);
+					}
 				}
 				
 			} else {
@@ -193,7 +211,7 @@ public class Main extends JavaPlugin implements Listener {
 			msgToPlayer.addExtra(rTab);
 			msgToPlayer.addExtra(comp2);
 			
-			bukkitConsoleText += prefixUser + comp2.toLegacyText();
+			bukkitConsoleText += prefixUser + comp2.toLegacyText() + " ";
 			
 		}
 		
@@ -209,7 +227,7 @@ public class Main extends JavaPlugin implements Listener {
 				TextComponent msgContent = new TextComponent(new ComponentBuilder(format(val)).create());
 				msgToPlayer.addExtra(msgContent);
 				msgToPlayer.addExtra(" ");
-				bukkitConsoleText += msgContent.toLegacyText();
+				bukkitConsoleText += msgContent.toLegacyText() + " ";
 			}
 			
 		}
@@ -226,9 +244,9 @@ public class Main extends JavaPlugin implements Listener {
 		if ((Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") != null) && (p.hasPermission("rv.discord"))) {
 			
 			if (Config.getDCConfig().equals(true)) {
-				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), username + " » " + ChatMessage);
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getMainTextChannel(), ChatColor.BOLD + prefixUser + username + " » " + ChatColor.RESET + ChatMessage);
 			} else if (Config.getDCConfig().equals(false)) {
-				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), username + " » " + ChatMessage);
+				DiscordUtil.sendMessage(DiscordSRV.getPlugin().getDestinationTextChannelForGameChannelName(Config.getDCChannel().toString()), ChatColor.BOLD + prefixUser + username + " » " + ChatColor.RESET + ChatMessage);
 			} else {
 				Bukkit.getLogger().warning("[RankViewer] Config Option 'Use Main Discord Channel' is not of type boolean");
 			}
